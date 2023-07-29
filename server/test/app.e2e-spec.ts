@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
 describe('AppModule (e2e)', () => {
@@ -16,6 +15,6 @@ describe('AppModule (e2e)', () => {
     });
 
     it('app should be defined', () => {
-        expect(app).toBeDefined()
+        expect(app).toBeDefined();
     });
 });

@@ -1,9 +1,15 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
-  "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testEnvironment": "node",
+    "testRegex": ".e2e-spec.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "globals": {
+        "NODE_ENV": "test",
+        "PORT": "5000",
+        "DATABASE_URL": "postgresql://<username>:<password>@localhost:5432/chat-app-test?schema=public",
+        "CORS_ORIGIN": "http://localhost:3000"
+    }
 }
