@@ -6,6 +6,7 @@ import { AuthModule } from './auth';
 
 // Modules
 import { UsersModule } from './shared';
+import { RoomsModule } from './modules';
 
 @Module({
     imports: [
@@ -18,11 +19,11 @@ import { UsersModule } from './shared';
             validate,
         }),
         PrismaModule,
+        AuthModule,
 
         // Modules
         UsersModule,
-
-        AuthModule,
+        RoomsModule,
     ],
     controllers: [],
     providers: [],
