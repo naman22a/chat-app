@@ -19,6 +19,9 @@ export class EnvironmentVariables {
     DATABASE_URL: string;
 
     @IsNotEmpty()
+    SESSION_SECRET: string;
+
+    @IsNotEmpty()
     CORS_ORIGIN: string;
 }
 

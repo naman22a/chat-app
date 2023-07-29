@@ -1,7 +1,9 @@
-import { Body, Controller, InternalServerErrorException, Post } from '@nestjs/common';
+import { Body, Controller, InternalServerErrorException, Post, Req } from '@nestjs/common';
 import { UsersService } from '../shared';
 import { OkResponse } from '../common/interfaces';
-import { RegisterDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
+import * as argon2 from 'argon2';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +35,37 @@ export class AuthController {
 
             // create user in database
             await this.usersService.create(body);
+
+            return { ok: true };
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    @Post('login')
+    async login(@Body() body: LoginDto, @Req() req: Request): Promise<OkResponse> {
+        const { usernameOrEmail, password } = body;
+
+        try {
+            // check if user exists
+            const user = usernameOrEmail.includes('@')
+                ? await this.usersService.findOneByEmail(usernameOrEmail)
+                : await this.usersService.findOneByUsername(usernameOrEmail);
+            if (!user) {
+                return {
+                    ok: false,
+                    errors: [{ field: 'usernameOrEmail', message: 'user not found' }],
+                };
+            }
+
+            // check if password is correct
+            const isMatch = await argon2.verify(user.password, password);
+            if (!isMatch) {
+                return { ok: false, errors: [{ field: 'password', message: 'wrong password' }] };
+            }
+
+            // login with sessions(cookie)
+            req.session.userId = user.id;
 
             return { ok: true };
         } catch (error) {

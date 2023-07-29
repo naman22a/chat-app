@@ -20,6 +20,6 @@ const exceptionFactory = (errors: ValidationError[] = []) => {
 
 export class CustomValidationPipe extends ValidationPipe {
     constructor() {
-        super({ exceptionFactory });
+        super({ exceptionFactory, whitelist: true });
     }
 }
