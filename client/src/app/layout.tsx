@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Chat App',
     description:
-        'A Chat app project create by Naman Arora using Web sockets technology'
+        'A Chat app project create by Naman Arora using Web sockets technology with socket.io'
 };
 
 export default function RootLayout({
