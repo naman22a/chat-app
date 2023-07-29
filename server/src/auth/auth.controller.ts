@@ -1,9 +1,19 @@
-import { Body, Controller, InternalServerErrorException, Post, Req } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    InternalServerErrorException,
+    Post,
+    Req,
+    Res,
+    UseGuards,
+} from '@nestjs/common';
 import { UsersService } from '../shared';
 import { OkResponse } from '../common/interfaces';
 import { LoginDto, RegisterDto } from './dto';
 import * as argon2 from 'argon2';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { COOKIE_NAME } from '../common/constants';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -71,5 +81,22 @@ export class AuthController {
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('logout')
+    async logout(
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<OkResponse> {
+        return new Promise((resolve) =>
+            req.session.destroy((error) => {
+                if (error) {
+                    resolve({ ok: false });
+                }
+                res.clearCookie(COOKIE_NAME);
+                resolve({ ok: true });
+            }),
+        );
     }
 }
