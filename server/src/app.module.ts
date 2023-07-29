@@ -3,6 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { configuration, validate } from './config';
 import { PrismaModule } from './prisma';
 
+// Modules
+import { UsersModule } from './shared';
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -14,6 +17,9 @@ import { PrismaModule } from './prisma';
             validate,
         }),
         PrismaModule,
+
+        // Modules
+        UsersModule,
     ],
     controllers: [],
     providers: [],
