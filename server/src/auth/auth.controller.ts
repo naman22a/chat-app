@@ -13,7 +13,7 @@ export class AuthController {
         try {
             // check if username is already taken
             const usernameTaken = await this.usersService.findOneByUsername(username);
-            if (!usernameTaken) {
+            if (usernameTaken) {
                 return {
                     ok: false,
                     errors: [
