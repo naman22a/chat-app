@@ -26,7 +26,7 @@ export class UsersService {
     async create(data: CreateUserDto) {
         const { password, ...rest } = data;
         const hashedPassword = await argon2.hash(password);
-        const avatar = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${rest.username}`;
+        const avatar = `https://api.dicebear.com/6.x/pixel-art/png?seed=${rest.username}`;
         return await this.prisma.user.create({
             data: { password: hashedPassword, avatar, ...rest },
         });
