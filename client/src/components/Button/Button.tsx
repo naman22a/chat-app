@@ -4,10 +4,17 @@ import { twMerge } from 'tailwind-merge';
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children?: React.ReactNode;
     isLoading?: boolean;
+    textClassName?: string;
 }
 
 const Button: React.FC<Props> = (props) => {
-    const { isLoading = false, children, className, ...btnProps } = props;
+    const {
+        isLoading = false,
+        children,
+        className,
+        textClassName,
+        ...btnProps
+    } = props;
     return (
         <button
             className={twMerge(
@@ -20,7 +27,9 @@ const Button: React.FC<Props> = (props) => {
             {...btnProps}
         >
             {isLoading && <span className="loading loading-spinner"></span>}
-            <span className="font-semibold text-lg">{children}</span>
+            <span className={twMerge('font-semibold text-lg', textClassName)}>
+                {children}
+            </span>
         </button>
     );
 };

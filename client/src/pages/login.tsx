@@ -1,17 +1,23 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import * as api from '@/api';
-import { Formik, Form } from 'formik';
 import { Button, InputField } from '@/components';
 import { HandleSubmit, LoginInputs } from '@/interfaces';
-import { useMutation } from '@tanstack/react-query';
-import { mapToErrors, notify, showError } from '../utils';
-import { useRouter } from 'next/router';
+import { mapToErrors, notify, showError } from '@/utils';
+import { Formik, Form } from 'formik';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const Login: NextPage = () => {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const { mutateAsync: login } = useMutation(
         ['auth', 'login'],
         api.auth.login,
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['users', 'me']);
+            },
+        },
     );
     const handleSubmit: HandleSubmit<LoginInputs> = async (
         values,
