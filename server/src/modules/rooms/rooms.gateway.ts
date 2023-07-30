@@ -59,7 +59,7 @@ export class RoomsGateway {
     }
 
     @SubscribeMessage('join')
-    async handleMessage(
+    async joinRoom(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
         @MessageBody('roomName') roomName: string,
     ) {

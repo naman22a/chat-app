@@ -57,8 +57,8 @@ export class RoomsController {
 
     @Post('create')
     async create(@Body() { name }: CreateRoomDto, @Req() req: Request) {
+        if (!name) return null;
         const ownerId = req.session.userId;
-        console.log(ownerId, name);
         try {
             // check if name is already taken
             const nameTaken = await this.roomsService.findOneByName(name);
@@ -71,5 +71,19 @@ export class RoomsController {
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
+    }
+
+    @Get('my')
+    async myRooms(@Req() req: Request) {
+        const userId = req.session.userId;
+        const rooms = await this.roomsService.myRooms(userId);
+        return rooms.map((room) => exlcudeRoomDetails(room));
+    }
+
+    @Get('joined')
+    async joinedRooms(@Req() req: Request) {
+        const userId = req.session.userId;
+        const rooms = await this.roomsService.joinedRooms(userId);
+        return rooms.map((room) => exlcudeRoomDetails(room));
     }
 }

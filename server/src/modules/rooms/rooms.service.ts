@@ -25,4 +25,18 @@ export class RoomsService {
             include: { owner: true, participants: true },
         });
     }
+
+    async myRooms(ownerId: number) {
+        return await this.prisma.room.findMany({
+            where: { ownerId },
+            include: { owner: true, participants: true },
+        });
+    }
+
+    async joinedRooms(ownerId: number) {
+        return await this.prisma.room.findMany({
+            where: { participants: { every: { id: ownerId } } },
+            include: { owner: true, participants: true },
+        });
+    }
 }
