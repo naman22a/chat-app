@@ -14,7 +14,9 @@ import * as argon2 from 'argon2';
 import { Request, Response } from 'express';
 import { COOKIE_NAME } from '../common/constants';
 import { AuthGuard } from './auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     constructor(private usersService: UsersService) {}

@@ -7,6 +7,7 @@ import { CustomValidationPipe } from './common/pipes';
 import * as session from 'express-session';
 import { COOKIE_NAME, __prod__ } from './common/constants';
 import { redis } from './common/redis';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 const RedisStore = require('connect-redis').default;
 
 declare module 'express-session' {
@@ -42,6 +43,11 @@ async function bootstrap() {
         }),
     );
     app.enableCors({ origin, credentials: true });
+
+    // Swagger
+    const config = new DocumentBuilder().setTitle('Chat App API').setVersion('1.0').build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
 
     await app.listen(port);
 }

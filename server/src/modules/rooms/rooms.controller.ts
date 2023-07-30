@@ -14,7 +14,9 @@ import { exlcudeRoomDetails } from './utils';
 import { AuthGuard } from '../../auth/auth.guard';
 import { CreateRoomDto } from './dto';
 import { Request } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('rooms')
 @UseGuards(AuthGuard)
 @Controller('rooms')
 export class RoomsController {
