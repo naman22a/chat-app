@@ -8,5 +8,6 @@ import { UsersModule } from '../../shared';
     imports: [UsersModule],
     controllers: [RoomsController],
     providers: [RoomsService, RoomsGateway],
+    exports: [RoomsService],
 })
 export class RoomsModule {}

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma';
 import { excludeUserDetails } from '../../shared';
+import { CreateMessageDto } from './dto';
 
 @Injectable()
 export class MessagesService {
@@ -11,5 +12,9 @@ export class MessagesService {
             where: { roomId },
             include: { sender: true },
         });
+    }
+
+    async create(senderId: number, roomId: number, { text }: CreateMessageDto) {
+        return await this.prisma.message.create({ data: { text, senderId, roomId } });
     }
 }
