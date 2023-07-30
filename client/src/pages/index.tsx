@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { NextPage } from 'next';
 import * as api from '@/api';
-import { Loading } from '@/components';
+import { IsAuth, Loading } from '@/components';
 import Image from 'next/image';
 
 const Index: NextPage = () => {
@@ -40,4 +40,4 @@ const Index: NextPage = () => {
     );
 };
 
-export default Index;
+export default IsAuth(Index);
