@@ -16,7 +16,7 @@ const Index: NextPage = () => {
     }
 
     return (
-        <div className="px-5 lg:px-20 py-5">
+        <div>
             <h1 className="text-4xl font-semibold mb-5">List of users</h1>
             {users.map((user) => (
                 <div key={user.id}>

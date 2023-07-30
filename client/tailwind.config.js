@@ -2,7 +2,7 @@
 module.exports = {
     content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
     theme: {
-        extend: {}
+        extend: {},
     },
     daisyui: {
         themes: [
@@ -16,10 +16,10 @@ module.exports = {
                     info: '#3abff8',
                     success: '#36d399',
                     warning: '#fbbd23',
-                    error: '#f87272'
-                }
-            }
-        ]
+                    error: '#dc2626',
+                },
+            },
+        ],
     },
-    plugins: [require('daisyui')]
+    plugins: [require('daisyui')],
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import Header from '../Header/Header';
+import { Header } from '@/components';
+import { Toaster } from 'react-hot-toast';
 
 interface Props {
     children: React.ReactNode;
@@ -7,10 +8,19 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
     return (
-        <>
+        <div>
             <Header />
-            {children}
-        </>
+            <div className="px-5 lg:px-20 py-5">{children}</div>
+            <Toaster
+                toastOptions={{
+                    style: {
+                        backgroundColor: '#030712',
+                        color: 'white',
+                        textAlign: 'center',
+                    },
+                }}
+            />
+        </div>
     );
 };
 
