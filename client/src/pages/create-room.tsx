@@ -23,7 +23,8 @@ const CreateRoom: NextPage = () => {
                 onSubmit={async (values, { setErrors }) => {
                     const room = await createRoom(values.name);
 
-                    if (room === null) {
+                    console.log(room);
+                    if (!room) {
                         setErrors({
                             name: 'room name is already taken, please try a different name',
                         });
