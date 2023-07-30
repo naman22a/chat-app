@@ -7,7 +7,7 @@ import {
     WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ServerToClientEvents } from './types';
+import { ServerToClientEvents } from '../../common/events';
 import { UsersService, excludeUserDetails } from '../../shared';
 import { COOKIE_NAME, __prod__ } from '../../common/constants';
 import { ConfigService } from '@nestjs/config';
