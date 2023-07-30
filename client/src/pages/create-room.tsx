@@ -1,7 +1,7 @@
 import * as api from '@/api';
 import { NextPage } from 'next';
 import { Form, Formik } from 'formik';
-import { Button, InputField } from '@/components';
+import { Button, InputField, IsAuth } from '@/components';
 import { useMutation } from '@tanstack/react-query';
 import { notify } from '../utils';
 import { useRouter } from 'next/router';
@@ -71,4 +71,4 @@ const CreateRoom: NextPage = () => {
     );
 };
 
-export default CreateRoom;
+export default IsAuth(CreateRoom);
