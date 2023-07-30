@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ServerToClientEvents } from './types';
-import { UsersService } from '../../shared';
+import { UsersService, excludeUserDetails } from '../../shared';
 import { COOKIE_NAME, __prod__ } from '../../common/constants';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../../config';
@@ -69,8 +69,8 @@ export class RoomsGateway {
         const user = await this.usersService.findOneById(userId);
 
         socket.join(roomName);
-        socket.to(roomName).emit('newUserJoined', user);
+        socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));
 
-        return user;
+        return excludeUserDetails(user);
     }
 }
