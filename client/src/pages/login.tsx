@@ -52,7 +52,7 @@ const Login: NextPage = () => {
                 }
                 onSubmit={handleSubmit}
             >
-                {({ values, isSubmitting }) => (
+                {({ isSubmitting }) => (
                     <Form className="flex flex-col w-full md:w-1/2 lg:w-1/4">
                         <InputField
                             name="usernameOrEmail"
