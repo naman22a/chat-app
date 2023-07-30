@@ -5,6 +5,7 @@ import { Button, InputField } from '@/components';
 import { useMutation } from '@tanstack/react-query';
 import { notify } from '../utils';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const CreateRoom: NextPage = () => {
     const router = useRouter();
@@ -21,6 +22,13 @@ const CreateRoom: NextPage = () => {
             <Formik
                 initialValues={{ name: '' }}
                 onSubmit={async (values, { setErrors }) => {
+                    if (!values.name) {
+                        setErrors({
+                            name: 'name is required',
+                        });
+                        return;
+                    }
+
                     const room = await createRoom(values.name);
 
                     console.log(room);
@@ -44,9 +52,18 @@ const CreateRoom: NextPage = () => {
                             words in room name. e.g: "
                             <span className="text-accent">rubiks-cube</span>"
                         </p>
-                        <Button isLoading={isSubmitting} type="submit">
-                            Create room
-                        </Button>
+                        <div className="flex items-center gap-4">
+                            <Link href="..">
+                                <Button>Cancel</Button>
+                            </Link>
+                            <Button
+                                isLoading={isSubmitting}
+                                type="submit"
+                                className="btn-secondary"
+                            >
+                                Create room
+                            </Button>
+                        </div>
                     </Form>
                 )}
             </Formik>
