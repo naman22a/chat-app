@@ -7,6 +7,7 @@ import { AuthModule } from './auth';
 // Modules
 import { UsersModule } from './shared';
 import { RoomsModule } from './modules';
+import { MessagesModule } from './modules/messages/messages.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { RoomsModule } from './modules';
         // Modules
         UsersModule,
         RoomsModule,
+        MessagesModule,
     ],
     controllers: [],
     providers: [],

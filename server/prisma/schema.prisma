@@ -17,10 +17,9 @@ model User {
     updatedAt DateTime @updatedAt
 
     // relations
-    messagesSent     Message[] @relation(name: "messagesSent")
-    messagesReceived Message[] @relation(name: "messagesReceived")
-    roomsCreated     Room[]    @relation(name: "owner")
-    roomsJoined      Room[]    @relation(name: "joined")
+    messagesSent Message[] @relation(name: "messagesSent")
+    roomsCreated Room[]    @relation(name: "owner")
+    roomsJoined  Room[]    @relation(name: "joined")
 }
 
 model Room {
@@ -31,8 +30,9 @@ model Room {
 
     // relations
     ownerId      Int
-    owner        User   @relation(name: "owner", fields: [ownerId], references: [id], onDelete: Cascade)
-    participants User[] @relation(name: "joined")
+    owner        User      @relation(name: "owner", fields: [ownerId], references: [id], onDelete: Cascade)
+    participants User[]    @relation(name: "joined")
+    messages     Message[] @relation(name: "roomMessages")
 }
 
 model Message {
@@ -42,8 +42,8 @@ model Message {
     updatedAt DateTime @updatedAt
 
     // relations
-    senderId   Int
-    sender     User @relation(name: "messagesSent", fields: [senderId], references: [id], onDelete: Cascade)
-    receiverId Int
-    receiver   User @relation(name: "messagesReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+    senderId Int
+    sender   User @relation(name: "messagesSent", fields: [senderId], references: [id], onDelete: Cascade)
+    roomId   Int
+    room     Room @relation(name: "roomMessages", fields: [roomId], references: [id], onDelete: Cascade)
 }
