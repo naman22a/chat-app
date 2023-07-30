@@ -16,7 +16,7 @@ const InputField: React.FC<Props> = ({ label, size: _, ...props }) => {
 
     return (
         <>
-            <div className="form-control mb-5">
+            <div className="form-control mb-5 w-full">
                 <label className="label" htmlFor={field.name}>
                     <span className="label-text">{label}</span>
                 </label>
