@@ -2,7 +2,9 @@ import { Controller, Get, Param, ParseIntPipe, UseGuards } from '@nestjs/common'
 import { MessagesService } from './messages.service';
 import { AuthGuard } from '../../auth/auth.guard';
 import { excludeMessageDetails } from './utils';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('messages')
 @UseGuards(AuthGuard)
 @Controller('messages')
 export class MessagesController {
