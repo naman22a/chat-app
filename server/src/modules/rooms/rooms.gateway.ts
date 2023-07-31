@@ -19,6 +19,7 @@ import { Request } from 'express';
 import { UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
+import { RoomsService } from './rooms.service';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -28,6 +29,7 @@ import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 export class RoomsGateway {
     constructor(
         private usersService: UsersService,
+        private roomsService: RoomsService,
         private configService: ConfigService<EnvironmentVariables>,
     ) {}
     @WebSocketServer()
@@ -67,6 +69,7 @@ export class RoomsGateway {
         const userId = req.session.userId;
 
         const user = await this.usersService.findOneById(userId);
+        await this.roomsService.join(userId, roomName);
 
         socket.join(roomName);
         socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));

@@ -26,6 +26,15 @@ export class RoomsService {
         });
     }
 
+    async join(userId: number, roomName: string) {
+        const room = await this.findOneByName(roomName);
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        await this.prisma.room.update({
+            where: { name: roomName },
+            data: { participants: { set: [...room.participants, user] } },
+        });
+    }
+
     async myRooms(ownerId: number) {
         return await this.prisma.room.findMany({
             where: { ownerId },
@@ -33,10 +42,21 @@ export class RoomsService {
         });
     }
 
-    async joinedRooms(ownerId: number) {
-        return await this.prisma.room.findMany({
-            where: { participants: { every: { id: ownerId } } },
+    async joinedRooms(userId: number) {
+        let rooms = await this.prisma.room.findMany({
             include: { owner: true, participants: true },
         });
+
+        rooms = rooms.filter((room) => {
+            for (const participant of room.participants) {
+                if (participant.id === userId) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+        return rooms;
     }
 }
