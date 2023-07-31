@@ -8,6 +8,7 @@ const Header: React.FC = () => {
     const { data, isLoading, isError } = useQuery(
         ['users', 'me'],
         api.users.me,
+        { refetchOnWindowFocus: false },
     );
     return (
         <header className="navbar bg-base-200 flex items-center justify-between px-5 lg:px-16 py-5 mb-5">
