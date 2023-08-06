@@ -10,7 +10,7 @@ const Layout: React.FC<Props> = ({ children }) => {
     return (
         <div>
             <Header />
-            <div className="px-5 lg:px-20 py-5">{children}</div>
+            <div className="pt-32 px-5 lg:px-20 h-screen">{children}</div>
             <Toaster
                 toastOptions={{
                     style: {

@@ -7,6 +7,16 @@ type Room = IRoom & {
     participants: User[];
 };
 
+export const getById = async (id: number): Promise<Room> => {
+    const res = await API.get(`/rooms/id/${id}`);
+    return res.data;
+};
+
+export const getByName = async (name: string): Promise<Room> => {
+    const res = await API.get(`/rooms/name/${name}`);
+    return res.data;
+};
+
 export const my = async (): Promise<Room[]> => {
     const res = await API.get('/rooms/my');
     return res.data;

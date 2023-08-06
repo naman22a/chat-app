@@ -11,7 +11,7 @@ const Header: React.FC = () => {
         { refetchOnWindowFocus: false },
     );
     return (
-        <header className="navbar bg-base-200 flex items-center justify-between px-5 lg:px-16 py-5 mb-5">
+        <header className="navbar bg-base-200 flex items-center justify-between px-5 lg:px-16 py-5 mb-5 absolute h-24">
             <Link href="/">
                 <h3 className="btn btn-ghost text-xl">Chat App</h3>
             </Link>

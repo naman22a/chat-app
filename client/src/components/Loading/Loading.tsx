@@ -1,9 +1,10 @@
 import React from 'react';
+import Spinner from './Spinner/Spinner';
 
 const Loading: React.FC = () => {
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <span className="loading loading-dots text-accent w-20"></span>;
+            <Spinner type="dots" size="lg" />
         </div>
     );
 };
