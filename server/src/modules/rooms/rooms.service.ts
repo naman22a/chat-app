@@ -33,6 +33,7 @@ export class RoomsService {
             where: { name: roomName },
             data: { participants: { set: [...room.participants, user] } },
         });
+        return room;
     }
 
     async myRooms(ownerId: number) {

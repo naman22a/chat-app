@@ -5,6 +5,7 @@ import {
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
+    WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ServerToClientEvents } from '../../common/events';
@@ -69,6 +70,8 @@ export class RoomsGateway {
         const userId = req.session.userId;
 
         const user = await this.usersService.findOneById(userId);
+        const room = await this.roomsService.findOneByName(roomName);
+        if (!room || !user) return null;
         await this.roomsService.join(userId, roomName);
 
         socket.join(roomName);

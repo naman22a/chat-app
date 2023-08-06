@@ -2,6 +2,7 @@ import React from 'react';
 import * as api from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import JoinRoomBtn from './JoinRoomBtn';
 
 const JoinedRooms: React.FC = () => {
     const {
@@ -35,6 +36,7 @@ const JoinedRooms: React.FC = () => {
                     )}
                 </div>
             )}
+            <JoinRoomBtn />
         </div>
     );
 };
