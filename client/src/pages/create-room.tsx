@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
-import * as api from '@/api';
-import { Form, Formik } from 'formik';
-import { Button, InputField, IsAuth } from '@/components';
-import { useMutation } from '@tanstack/react-query';
-import { notify } from '../utils';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useSocket } from '../lib/socket';
+import { useRouter } from 'next/router';
+import * as api from '@/api';
+import { notify } from '@/utils';
+import { useSocket } from '@/lib/socket';
+import { Button, InputField, IsAuth } from '@/components';
+import { Form, Formik } from 'formik';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateRoom: NextPage = () => {
     const socket = useSocket('rooms');

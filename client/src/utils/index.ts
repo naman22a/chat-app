@@ -1,5 +1,5 @@
 import { toast } from 'react-hot-toast';
-import { FieldError } from '../api/types';
+import { FieldError } from '@/api/types';
 
 export const mapToErrors = (errors: FieldError[]) => {
     const errorMap: Record<string, string> = {};

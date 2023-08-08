@@ -2,7 +2,7 @@ import React from 'react';
 import * as api from '@/api';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { Loading } from '..';
+import { Loading } from '@/components';
 
 function IsAuth<T>(Component: React.ComponentType<T>) {
     return (props: T) => {

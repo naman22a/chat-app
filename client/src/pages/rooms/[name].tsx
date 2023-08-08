@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import * as api from '@/api';
-import { useQuery } from '@tanstack/react-query';
 import { Chat, IsAuth, Spinner } from '@/components';
+import { useQuery } from '@tanstack/react-query';
 
 const RoomPage: NextPage = () => {
     const router = useRouter();

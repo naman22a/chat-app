@@ -1,5 +1,5 @@
-import { Message } from '../api/types';
-import { User } from '../api/users/types';
+import { Message } from '@/api/types';
+import { User } from '@/api/users/types';
 
 export interface ServerToClientEvents {
     newUserJoined: (payload: Omit<User, 'password'>) => void;

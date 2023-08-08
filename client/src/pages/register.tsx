@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import * as api from '@/api';
 import { Button, InputField } from '@/components';
 import { mapToErrors, notify, showError } from '@/utils';
 import { HandleSubmit, RegisterInputs } from '@/interfaces';
 import { Form, Formik } from 'formik';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 
 const Register: NextPage = () => {
     const router = useRouter();

@@ -1,9 +1,9 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import * as api from '@/api';
 import { Button } from '@/components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { notify, showError } from '@/utils';
-import { useRouter } from 'next/router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const LogoutButton: React.FC = () => {
     const queryClient = useQueryClient();

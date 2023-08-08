@@ -1,8 +1,8 @@
 import React from 'react';
+import Link from 'next/link';
 import * as api from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import JoinRoomBtn from './JoinRoomBtn';
+import JoinRoomBtn from './JoinRoomBtn/JoinRoomBtn';
 
 const JoinedRooms: React.FC = () => {
     const {

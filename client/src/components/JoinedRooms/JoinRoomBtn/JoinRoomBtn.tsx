@@ -1,11 +1,11 @@
 import React from 'react';
 import * as api from '@/api';
+import { User } from '@/api/users/types';
+import { useSocket } from '@/lib/socket';
+import { HandleSubmit } from '@/interfaces';
+import { notify, showError } from '@/utils';
 import { Button, InputField } from '@/components';
 import { Form, Formik } from 'formik';
-import { HandleSubmit } from '../../interfaces';
-import { useSocket } from '../../lib/socket';
-import { User } from '../../api/users/types';
-import { notify, showError } from '../../utils';
 import { useQuery } from '@tanstack/react-query';
 
 const JoinRoomBtn: React.FC = () => {

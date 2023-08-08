@@ -1,7 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import * as api from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 
 const MyRooms: React.FC = () => {
     const {

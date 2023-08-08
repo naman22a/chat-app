@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '@/api';
-import { Room } from '../../api/rooms/types';
+import { Message } from '@/api/types';
+import { Room } from '@/api/rooms/types';
+import { Spinner } from '@/components';
+import { useSocket } from '@/lib/socket';
 import { useQuery } from '@tanstack/react-query';
-import { Spinner } from '..';
 import { twMerge } from 'tailwind-merge';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Message } from '../../api/types';
-import { useSocket } from '../../lib/socket';
 dayjs.extend(relativeTime);
 
 interface Props {
