@@ -18,3 +18,7 @@ export const notify = (message: string) => {
 export const showError = (
     message: string = 'Opps! Something went wrong.\nPlease try again later.',
 ) => toast.error(message);
+
+export const formatError = (text: string) => {
+    return text.charAt(0).toUpperCase() + text.slice(1) + '.';
+};

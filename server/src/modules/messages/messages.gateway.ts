@@ -19,6 +19,7 @@ import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
 import { excludeMessageDetails } from './utils';
+import { Message } from '@prisma/client';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -59,22 +60,23 @@ export class MessagesGateway {
 
     @SubscribeMessage('messages')
     async handleMessages(@MessageBody('roomId') roomId: number) {
-        console.log('here');
         const msgs = await this.messagesService.findAll(roomId);
         return msgs.map((msg) => excludeMessageDetails(msg));
     }
 
+    // TODO: fix async web sockets
+    // https://docs.nestjs.com/websockets/gateways#asynchronous-responses
     @SubscribeMessage('sendMessage')
     async handleSendMessage(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
         @MessageBody('message') textMsg: string,
-        @MessageBody('roomId') roomId: number,
-    ): Promise<string> {
+        @MessageBody('roomName') roomName: string,
+    ): Promise<Message | null> {
         const req = socket.request as Request;
         const senderId = req.session.userId;
-        await this.messagesService.create(senderId, roomId, { text: textMsg });
-        const room = await this.roomsService.findOneById(roomId);
-        socket.to(room.name).emit('receiveMessage', textMsg);
-        return textMsg;
+        const room = await this.roomsService.findOneByName(roomName);
+        if (!room) return null;
+        const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
+        socket.to(room.name).emit('receiveMessage', newMsg);
     }
 }

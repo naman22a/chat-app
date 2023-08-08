@@ -4,10 +4,8 @@ import {
     MessageBody,
     SubscribeMessage,
     WebSocketGateway,
-    WebSocketServer,
-    WsResponse,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 import { ServerToClientEvents } from '../../common/events';
 import { UsersService, excludeUserDetails } from '../../shared';
 import { COOKIE_NAME, __prod__ } from '../../common/constants';
@@ -33,8 +31,6 @@ export class RoomsGateway {
         private roomsService: RoomsService,
         private configService: ConfigService<EnvironmentVariables>,
     ) {}
-    @WebSocketServer()
-    server: Server<any, ServerToClientEvents>;
 
     afterInit(client: Socket) {
         const wrap = (middleware: Function) => (socket: Socket, next: (err?: Error) => void) =>

@@ -1,14 +1,11 @@
 import React, { InputHTMLAttributes } from 'react';
+import { formatError } from '@/utils';
 import { useField } from 'formik';
 import { twMerge } from 'tailwind-merge';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
     name: string;
     label: string;
-};
-
-const formatError = (text: string) => {
-    return text.charAt(0).toUpperCase() + text.slice(1) + '.';
 };
 
 const InputField: React.FC<Props> = ({ label, size: _, ...props }) => {
