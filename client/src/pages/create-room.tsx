@@ -6,9 +6,10 @@ import { useMutation } from '@tanstack/react-query';
 import { notify } from '../utils';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { socket } from '../lib/socket';
+import { useSocket } from '../lib/socket';
 
 const CreateRoom: NextPage = () => {
+    const socket = useSocket('rooms');
     const router = useRouter();
 
     const { mutateAsync: createRoom } = useMutation(

@@ -3,12 +3,13 @@ import * as api from '@/api';
 import { Button, InputField } from '@/components';
 import { Form, Formik } from 'formik';
 import { HandleSubmit } from '../../interfaces';
-import { socket } from '../../lib/socket';
+import { useSocket } from '../../lib/socket';
 import { User } from '../../api/users/types';
 import { notify, showError } from '../../utils';
 import { useQuery } from '@tanstack/react-query';
 
 const JoinRoomBtn: React.FC = () => {
+    const socket = useSocket('rooms');
     const { data: rooms } = useQuery(['rooms', 'joined'], api.rooms.joined);
     const handleJoinRoom: HandleSubmit<{ name: string }> = async (
         { name },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as api from '@/api';
 import { Room } from '../../api/rooms/types';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +8,8 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Message } from '../../api/types';
+import { useSocket } from '../../lib/socket';
 dayjs.extend(relativeTime);
 
 interface Props {
@@ -16,20 +18,18 @@ interface Props {
 
 const Chat: React.FC<Props> = (props) => {
     const { room } = props;
+    const socket = useSocket('messages');
     const { data: me } = useQuery(['users', 'me'], api.users.me);
-    const {
-        data: msgs,
-        isLoading,
-        isError,
-    } = useQuery(
-        ['messages', 'room', room.name],
-        () => api.messages.getMessages(room.id),
-        {
-            enabled: !!room,
-        },
-    );
+    const [msgs, setMsgs] = useState<Message[] | null>(null);
 
-    if (isLoading || isError) {
+    useEffect(() => {
+        socket.emit('messages', room.id, (data: Message[]) => {
+            console.log(data);
+            setMsgs(data);
+        });
+    }, []);
+
+    if (!msgs) {
         return (
             <div>
                 <h2 className="mb-10 text-xl font-semibold">

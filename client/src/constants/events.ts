@@ -1,3 +1,4 @@
+import { Message } from '../api/types';
 import { User } from '../api/users/types';
 
 export interface ServerToClientEvents {
@@ -8,4 +9,5 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
     join: (roomName: string) => Omit<User, 'password'>;
     sendMessage: (message: string, roomId: number) => string;
+    messages: (roomId: number) => Message[];
 }

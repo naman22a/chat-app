@@ -9,4 +9,3 @@ export default API;
 export * as users from './users';
 export * as auth from './auth';
 export * as rooms from './rooms';
-export * as messages from './messages';

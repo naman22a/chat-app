@@ -18,6 +18,7 @@ import { UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
+import { excludeMessageDetails } from './utils';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -56,8 +57,15 @@ export class MessagesGateway {
         client.use(SocketAuthMiddleware() as any);
     }
 
+    @SubscribeMessage('messages')
+    async handleMessages(@MessageBody('roomId') roomId: number) {
+        console.log('here');
+        const msgs = await this.messagesService.findAll(roomId);
+        return msgs.map((msg) => excludeMessageDetails(msg));
+    }
+
     @SubscribeMessage('sendMessage')
-    async handleMessage(
+    async handleSendMessage(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
         @MessageBody('message') textMsg: string,
         @MessageBody('roomId') roomId: number,
