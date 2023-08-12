@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as api from '@/api';
 import { Message } from '@/api/types';
 import { Room } from '@/api/rooms/types';
@@ -11,15 +11,16 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { User } from '../../api/users/types';
 dayjs.extend(relativeTime);
 
 interface Props {
     room: Room;
 }
+const socket = useSocket('messages');
 
 const Chat: React.FC<Props> = (props) => {
     const { room } = props;
-    const socket = useSocket('messages');
     const {
         data: me,
         isLoading,
@@ -30,13 +31,14 @@ const Chat: React.FC<Props> = (props) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        // TODO: it is not working because of backend issues (joining room issue)
         socket.on('receiveMessage', (newMsg: Message) => {
             setMsgs((prev) => [...prev!, newMsg]);
         });
         socket.emit('messages', { roomId: room.id }, (data: Message[]) => {
             setMsgs(data);
         });
-    }, [socket]);
+    }, []);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,7 +46,14 @@ const Chat: React.FC<Props> = (props) => {
             setError('message is required');
             return;
         }
-        socket.emit('sendMessage', { message, roomName: room.name });
+        socket.emit(
+            'sendMessage',
+            { message, roomName: room.name },
+            (newMsg: Message) => {
+                setMsgs((prev) => [...prev!, newMsg]);
+            },
+        );
+
         setMessage('');
     };
 

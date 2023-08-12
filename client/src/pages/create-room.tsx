@@ -27,7 +27,6 @@ const CreateRoom: NextPage = () => {
             <Formik
                 initialValues={{ name: '' }}
                 onSubmit={async ({ name }, { setErrors }) => {
-                    console.log(name);
                     if (!name) {
                         setErrors({
                             name: 'name is required',

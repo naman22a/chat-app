@@ -25,7 +25,6 @@ const Login: NextPage = () => {
     ) => {
         try {
             const res = await login(values);
-            console.log(res);
             if (res.ok && !res.errors) {
                 notify('Logged In');
                 router.push('/');

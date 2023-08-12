@@ -19,7 +19,7 @@ import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
 import { excludeMessageDetails } from './utils';
-import { Message } from '@prisma/client';
+import { Message, User } from '@prisma/client';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -64,8 +64,6 @@ export class MessagesGateway {
         return msgs.map((msg) => excludeMessageDetails(msg));
     }
 
-    // TODO: fix async web sockets
-    // https://docs.nestjs.com/websockets/gateways#asynchronous-responses
     @SubscribeMessage('sendMessage')
     async handleSendMessage(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
@@ -76,7 +74,20 @@ export class MessagesGateway {
         const senderId = req.session.userId;
         const room = await this.roomsService.findOneByName(roomName);
         if (!room) return null;
-        const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
+        // const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
+        const newMsg = {
+            id: Date.now(),
+            text: textMsg,
+            roomId: room.id,
+            senderId,
+            sender: room.participants.filter((p) => p.id === senderId)[0],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        } satisfies Message & { sender: User };
+        // socket.to(room.name).emit('receiveMessage', newMsg);
+        // TODO: fix join room it is not working because of it
         socket.to(room.name).emit('receiveMessage', newMsg);
+
+        return newMsg;
     }
 }

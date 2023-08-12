@@ -15,6 +15,9 @@ export class MessagesService {
     }
 
     async create(senderId: number, roomId: number, { text }: CreateMessageDto) {
-        return await this.prisma.message.create({ data: { text, senderId, roomId } });
+        return await this.prisma.message.create({
+            data: { text, senderId, roomId },
+            include: { sender: true },
+        });
     }
 }
