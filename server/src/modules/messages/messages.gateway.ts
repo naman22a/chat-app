@@ -90,8 +90,6 @@ export class MessagesGateway {
             updatedAt: new Date(),
         } satisfies Message & { sender: User };
         console.log(excludeMessageDetails(newMsg));
-        // TODO: fix join room it is not working because of it
-
         socket.to(room.name).emit('receiveMessage', excludeMessageDetails(newMsg));
 
         return excludeMessageDetails(newMsg);
