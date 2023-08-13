@@ -31,7 +31,6 @@ const Chat: React.FC<Props> = (props) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        // TODO: it is not working because of backend issues (joining room issue)
         socket.on('receiveMessage', (newMsg: Message) => {
             setMsgs((prev) => [...prev!, newMsg]);
         });
