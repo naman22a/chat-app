@@ -34,6 +34,8 @@ const Chat: React.FC<Props> = (props) => {
         socket.on('receiveMessage', (newMsg: Message) => {
             setMsgs((prev) => [...prev!, newMsg]);
         });
+
+        // it also auto joins the user
         socket.emit('messages', { roomId: room.id }, (data: Message[]) => {
             setMsgs(data);
         });
