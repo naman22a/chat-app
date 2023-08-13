@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as api from '@/api';
 import { Message } from '@/api/types';
 import { Room } from '@/api/rooms/types';
@@ -40,9 +40,9 @@ const Chat: React.FC<Props> = (props) => {
             setMsgs(data);
         });
         // socket.emit('sendJoin', room.name);
-        // socket.on('newUserJoined', (user: User) => {
-        //     toast.success(`${user.username} joined the chat`);
-        // });
+        socket.on('newUserJoined', (user: User) => {
+            toast.success(`${user.username} joined the chat`);
+        });
     }, []);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {

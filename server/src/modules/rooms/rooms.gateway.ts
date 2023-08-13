@@ -19,6 +19,8 @@ import { UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from './rooms.service';
+import { OkResponse } from '../../common/interfaces';
+import { User } from '@prisma/client';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -57,24 +59,43 @@ export class RoomsGateway {
         client.use(SocketAuthMiddleware() as any);
     }
 
-    /*
     @SubscribeMessage('join')
     async joinRoom(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
         @MessageBody('roomName') roomName: string,
-    ) {
-        const req = socket.request as Request;
-        const userId = req.session.userId;
+    ): Promise<OkResponse & { data?: Omit<User, 'password'> }> {
+        try {
+            const req = socket.request as Request;
+            const userId = req.session.userId;
 
-        const user = await this.usersService.findOneById(userId);
-        const room = await this.roomsService.findOneByName(roomName);
-        if (!room || !user) return null;
-        await this.roomsService.join(userId, roomName);
+            const user = await this.usersService.findOneById(userId);
+            const room = await this.roomsService.findOneByName(roomName);
+            // room not found
+            if (!room)
+                return { ok: false, errors: [{ field: 'roomName', message: 'room not found' }] };
 
-        socket.join(roomName);
-        socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));
+            // join the room
+            socket.join(roomName);
 
-        return excludeUserDetails(user);
+            if (room.participants.filter((p) => p.id === userId)[0]) {
+                return {
+                    ok: true,
+                    errors: [{ field: 'roomName', message: 'room already joined' }],
+                };
+            }
+            // not joined room yet(is not a participant)
+            else {
+                await this.roomsService.becomeAParticipant(userId, roomName);
+                socket.in(roomName).emit('newUserJoined', excludeUserDetails(user));
+            }
+
+            return {
+                ok: true,
+                data: excludeUserDetails(user),
+            };
+        } catch (error) {
+            console.error(error);
+            return { ok: false };
+        }
     }
-    */
 }

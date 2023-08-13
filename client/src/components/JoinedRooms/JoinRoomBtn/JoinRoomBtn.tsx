@@ -1,16 +1,17 @@
 import React from 'react';
-import * as api from '@/api';
 import { User } from '@/api/users/types';
 import { useSocket } from '@/lib/socket';
 import { HandleSubmit } from '@/interfaces';
 import { notify, showError } from '@/utils';
 import { Button, InputField } from '@/components';
 import { Form, Formik } from 'formik';
-import { useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { OkResponse } from '../../../api/types';
+
+const socket = useSocket('rooms');
 
 const JoinRoomBtn: React.FC = () => {
-    const socket = useSocket('rooms');
-    const { data: rooms } = useQuery(['rooms', 'joined'], api.rooms.joined);
+    const queryClient = useQueryClient();
     const handleJoinRoom: HandleSubmit<{ name: string }> = async (
         { name },
         { setErrors },
@@ -22,26 +23,21 @@ const JoinRoomBtn: React.FC = () => {
                 return;
             }
 
-            // check if name exists
-            let nameExists = false;
-            socket!.emit('join', { roomName: name }, (user: User | null) => {
-                if (!user) {
-                    nameExists = true;
-                }
-            });
-            if (!nameExists) {
-                setErrors({ name: 'room name not found' });
-                return;
-            }
+            socket!.emit(
+                'join',
+                { roomName: name },
+                (res: OkResponse & { data?: User }) => {
+                    if (res.ok && res.data && !res.errors) {
+                        notify('Joined new room');
+                    } else if (res.errors) {
+                        setErrors({ name: res.errors[0].message });
+                    } else {
+                        showError();
+                    }
+                },
+            );
 
-            // check if room already joined
-            const alreadyJoinedRoom = rooms?.find((r) => r.name === name);
-            if (alreadyJoinedRoom) {
-                setErrors({ name: 'room name already joined' });
-                return;
-            }
-
-            notify('Joined new room');
+            await queryClient.invalidateQueries(['rooms', 'joined']);
         } catch (error) {
             console.error(error);
             showError();

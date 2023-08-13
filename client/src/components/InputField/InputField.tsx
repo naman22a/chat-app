@@ -29,7 +29,7 @@ const InputField: React.FC<Props> = ({ label, size: _, ...props }) => {
                     )}
                 />
                 {error && (
-                    <p className="text-error text-sm mt-1">
+                    <p className="text-error text-sm mt-1 font-semibold">
                         {formatError(error)}
                     </p>
                 )}
