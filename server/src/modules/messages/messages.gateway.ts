@@ -20,7 +20,6 @@ import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
 import { excludeMessageDetails } from './utils';
 import { Message, User } from '@prisma/client';
-import { UsersService } from '../../shared';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -29,7 +28,6 @@ import { UsersService } from '../../shared';
 })
 export class MessagesGateway {
     constructor(
-        private usersService: UsersService,
         private messagesService: MessagesService,
         private roomsService: RoomsService,
         private configService: ConfigService<EnvironmentVariables>,
