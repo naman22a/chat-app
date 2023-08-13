@@ -67,6 +67,9 @@ export class RoomsController {
             // create room in database
             const room = await this.roomsService.create(name, ownerId);
 
+            // become a participant of the room
+            this.roomsService.becomeAParticipant(ownerId, name);
+
             return exlcudeRoomDetails(room);
         } catch (error) {
             throw new InternalServerErrorException(error);
@@ -81,7 +84,7 @@ export class RoomsController {
     }
 
     @Get('joined')
-    async joinedRooms(@Req() req: Request) {
+    async joined(@Req() req: Request) {
         const userId = req.session.userId;
         const rooms = await this.roomsService.joinedRooms(userId);
         return rooms.map((room) => exlcudeRoomDetails(room));

@@ -26,7 +26,7 @@ export class RoomsService {
         });
     }
 
-    async join(userId: number, roomName: string) {
+    async becomeAParticipant(userId: number, roomName: string) {
         const room = await this.findOneByName(roomName);
         const user = await this.prisma.user.findUnique({ where: { id: userId } });
         await this.prisma.room.update({

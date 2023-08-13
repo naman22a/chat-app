@@ -74,7 +74,16 @@ export class MessagesGateway {
         const senderId = req.session.userId;
         const room = await this.roomsService.findOneByName(roomName);
         if (!room) return null;
-        const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
+        // const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
+        const newMsg = {
+            id: Date.now(),
+            text: textMsg,
+            senderId,
+            roomId: room.id,
+            sender: room.participants.filter((p) => p.id === senderId)[0],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        } satisfies Message & { sender: User };
         // TODO: fix join room it is not working because of it
         socket.to(room.name).emit('receiveMessage', newMsg);
 

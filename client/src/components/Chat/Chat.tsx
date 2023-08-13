@@ -12,6 +12,7 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { User } from '../../api/users/types';
+import { toast } from 'react-hot-toast';
 dayjs.extend(relativeTime);
 
 interface Props {
@@ -38,6 +39,10 @@ const Chat: React.FC<Props> = (props) => {
         socket.emit('messages', { roomId: room.id }, (data: Message[]) => {
             setMsgs(data);
         });
+        // socket.emit('sendJoin', room.name);
+        // socket.on('newUserJoined', (user: User) => {
+        //     toast.success(`${user.username} joined the chat`);
+        // });
     }, []);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {

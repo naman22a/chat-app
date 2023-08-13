@@ -17,7 +17,9 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "gen:env": "gen-env-types .env -o ./typings/env.d.ts && prettier --write ./typings/env.d.ts"
+        "gen:env": "gen-env-types .env -o ./typings/env.d.ts && prettier --write ./typings/env.d.ts",
+        "mg": "prisma migrate dev",
+        "gen": "prisma generate"
     },
     "dependencies": {
         "@nestjs/common": "^10.0.0",

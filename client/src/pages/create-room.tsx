@@ -3,13 +3,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as api from '@/api';
 import { notify } from '@/utils';
-import { useSocket } from '@/lib/socket';
 import { Button, InputField, IsAuth } from '@/components';
 import { Form, Formik } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 
 const CreateRoom: NextPage = () => {
-    const socket = useSocket('rooms');
     const router = useRouter();
 
     const { mutateAsync: createRoom } = useMutation(
@@ -49,7 +47,6 @@ const CreateRoom: NextPage = () => {
                         });
                         return;
                     }
-                    socket!.emit('join', { roomName: name });
                     await router.push('/');
                     notify('Room created');
                 }}

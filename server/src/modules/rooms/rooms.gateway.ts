@@ -57,6 +57,7 @@ export class RoomsGateway {
         client.use(SocketAuthMiddleware() as any);
     }
 
+    /*
     @SubscribeMessage('join')
     async joinRoom(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
@@ -75,4 +76,5 @@ export class RoomsGateway {
 
         return excludeUserDetails(user);
     }
+    */
 }
