@@ -20,8 +20,7 @@ import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
 import { excludeMessageDetails } from './utils';
 import { Message, User } from '@prisma/client';
-import { UsersService, excludeUserDetails } from '../../shared';
-import { OkResponse } from '../../common/interfaces';
+import { UsersService } from '../../shared';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
