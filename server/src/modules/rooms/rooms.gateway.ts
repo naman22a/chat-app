@@ -24,7 +24,7 @@ import { User } from '@prisma/client';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
-    namespace: 'rooms',
+    namespace: 'chat',
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
 export class RoomsGateway {
@@ -86,7 +86,7 @@ export class RoomsGateway {
             // not joined room yet(is not a participant)
             else {
                 await this.roomsService.becomeAParticipant(userId, roomName);
-                socket.in(roomName).emit('newUserJoined', excludeUserDetails(user));
+                socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));
             }
 
             return {

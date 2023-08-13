@@ -8,7 +8,7 @@ import { Form, Formik } from 'formik';
 import { useQueryClient } from '@tanstack/react-query';
 import { OkResponse } from '../../../api/types';
 
-const socket = useSocket('rooms');
+const socket = useSocket('chat');
 
 const JoinRoomBtn: React.FC = () => {
     const queryClient = useQueryClient();

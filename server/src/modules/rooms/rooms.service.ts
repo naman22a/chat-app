@@ -13,7 +13,7 @@ export class RoomsService {
     }
 
     async findOneByName(name: string) {
-        return await this.prisma.room.findUnique({
+        return await this.prisma.room.findFirst({
             where: { name },
             include: { owner: true, participants: true },
         });

@@ -20,14 +20,17 @@ import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 import { RoomsService } from '../rooms/rooms.service';
 import { excludeMessageDetails } from './utils';
 import { Message, User } from '@prisma/client';
+import { UsersService, excludeUserDetails } from '../../shared';
+import { OkResponse } from '../../common/interfaces';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
-    namespace: 'messages',
+    namespace: 'chat',
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
 export class MessagesGateway {
     constructor(
+        private usersService: UsersService,
         private messagesService: MessagesService,
         private roomsService: RoomsService,
         private configService: ConfigService<EnvironmentVariables>,
@@ -59,7 +62,12 @@ export class MessagesGateway {
     }
 
     @SubscribeMessage('messages')
-    async handleMessages(@MessageBody('roomId') roomId: number) {
+    async handleMessages(
+        @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
+        @MessageBody('roomId') roomId: number,
+    ) {
+        const room = await this.roomsService.findOneById(roomId);
+        socket.join(room.name);
         const msgs = await this.messagesService.findAll(roomId);
         return msgs.map((msg) => excludeMessageDetails(msg));
     }
@@ -84,9 +92,11 @@ export class MessagesGateway {
             createdAt: new Date(),
             updatedAt: new Date(),
         } satisfies Message & { sender: User };
+        console.log(excludeMessageDetails(newMsg));
         // TODO: fix join room it is not working because of it
-        socket.to(room.name).emit('receiveMessage', newMsg);
 
-        return newMsg;
+        socket.to(room.name).emit('receiveMessage', excludeMessageDetails(newMsg));
+
+        return excludeMessageDetails(newMsg);
     }
 }

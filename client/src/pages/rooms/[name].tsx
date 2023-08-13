@@ -1,8 +1,12 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import * as api from '@/api';
 import { Chat, IsAuth, Spinner } from '@/components';
 import { useQuery } from '@tanstack/react-query';
+import { useSocket } from '../../lib/socket';
+
+const socket = useSocket('chat');
 
 const RoomPage: NextPage = () => {
     const router = useRouter();
@@ -12,6 +16,16 @@ const RoomPage: NextPage = () => {
         isLoading,
         isError,
     } = useQuery(['rooms', name], () => api.rooms.getByName(name));
+
+    useEffect(() => {
+        if (room) socket.emit('join', room.name);
+
+        // ! FIX IT: it is not working idk why 😭
+        // socket.on('newUserJoined', (user: User) => {
+        //     console.log(user);
+        //     toast.success(`${user.username} joined the chat`);
+        // });
+    }, [socket, room]);
 
     if (isLoading || isError) {
         return (
