@@ -26,8 +26,12 @@ const JoinRoomBtn: React.FC = () => {
             socket!.emit(
                 'join',
                 { roomName: name },
-                (res: OkResponse & { data?: User }) => {
+                async (res: OkResponse & { data?: User }) => {
                     if (res.ok && res.data && !res.errors) {
+                        await queryClient.invalidateQueries([
+                            'rooms',
+                            'joined',
+                        ]);
                         notify('Joined new room');
                     } else if (res.errors) {
                         setErrors({ name: res.errors[0].message });
@@ -36,8 +40,6 @@ const JoinRoomBtn: React.FC = () => {
                     }
                 },
             );
-
-            await queryClient.invalidateQueries(['rooms', 'joined']);
         } catch (error) {
             console.error(error);
             showError();
