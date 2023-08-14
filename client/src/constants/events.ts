@@ -2,7 +2,7 @@ import { Message } from '@/api/types';
 import { User } from '@/api/users/types';
 
 export interface ServerToClientEvents {
-    newUserJoined: (payload: Omit<User, 'password'>) => void;
+    joined: (payload: Omit<User, 'password'>) => void;
     receiveMessage: (msgText: string) => void;
 }
 

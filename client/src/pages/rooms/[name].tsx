@@ -21,7 +21,7 @@ const RoomPage: NextPage = () => {
 
     useEffect(() => {
         // ! FIX IT: it is not working idk why 😭
-        socket.on('newUserJoined', (user: User) => {
+        socket.on('joined', (user: User) => {
             console.log(user);
             toast.success(`${user.username} joined the chat`);
         });

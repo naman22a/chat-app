@@ -7,10 +7,12 @@ import { Button, InputField } from '@/components';
 import { Form, Formik } from 'formik';
 import { useQueryClient } from '@tanstack/react-query';
 import { OkResponse } from '../../../api/types';
+import { useRouter } from 'next/router';
 
 const socket = useSocket();
 
 const JoinRoomBtn: React.FC = () => {
+    const router = useRouter();
     const queryClient = useQueryClient();
     const handleJoinRoom: HandleSubmit<{ name: string }> = async (
         { name },
@@ -32,6 +34,7 @@ const JoinRoomBtn: React.FC = () => {
                             'rooms',
                             'joined',
                         ]);
+                        await router.push(`/rooms/${name}`);
                         notify('Joined new room');
                     } else if (res.errors) {
                         setErrors({ name: res.errors[0].message });

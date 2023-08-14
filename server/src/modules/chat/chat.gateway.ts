@@ -20,6 +20,8 @@ import { redis } from '../../common/redis';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 const RedisStore = require('connect-redis').default;
 
+const sleep = (ms: number = 2000) => new Promise((resolve) => setTimeout(resolve, ms));
+
 @WebSocketGateway({
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
@@ -71,9 +73,10 @@ export class ChatGateway {
             if (!room)
                 return { ok: false, errors: [{ field: 'roomName', message: 'room not found' }] };
 
+            socket.join(roomName);
+
             // already a participant
             if (room.participants.filter((p) => p.id === userId)[0]) {
-                socket.join(roomName);
                 return {
                     ok: true,
                     errors: [{ field: 'roomName', message: 'room already joined' }],
@@ -82,8 +85,7 @@ export class ChatGateway {
 
             // not a participant yet
             await this.roomsService.becomeAParticipant(userId, roomName);
-            socket.join(roomName);
-            socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));
+            socket.to(roomName).emit('joined', excludeUserDetails(user));
 
             return {
                 ok: true,
