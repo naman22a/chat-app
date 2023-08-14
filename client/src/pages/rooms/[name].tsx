@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Chat, IsAuth, Spinner } from '@/components';
 import { toast } from 'react-hot-toast';
 
-const socket = useSocket('chat');
+const socket = useSocket();
 
 const RoomPage: NextPage = () => {
     const router = useRouter();
@@ -22,6 +22,7 @@ const RoomPage: NextPage = () => {
     useEffect(() => {
         // ! FIX IT: it is not working idk why 😭
         socket.on('newUserJoined', (user: User) => {
+            console.log(user);
             toast.success(`${user.username} joined the chat`);
         });
     }, [socket, room]);

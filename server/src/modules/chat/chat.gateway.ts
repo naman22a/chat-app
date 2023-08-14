@@ -21,7 +21,6 @@ import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 const RedisStore = require('connect-redis').default;
 
 @WebSocketGateway({
-    namespace: 'chat',
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
 export class ChatGateway {

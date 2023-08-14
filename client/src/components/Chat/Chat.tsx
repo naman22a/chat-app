@@ -17,7 +17,7 @@ interface Props {
     room: Room;
 }
 
-const socket = useSocket('chat');
+const socket = useSocket();
 
 const Chat: React.FC<Props> = (props) => {
     const { room } = props;
