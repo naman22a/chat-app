@@ -4,7 +4,7 @@ import { User } from '@/api/users/types';
 export interface ServerToClientEvents {
     joined: (payload: Omit<User, 'password'>) => void;
     receiveMessage: (msgText: Message) => void;
-    typingResponse: (payload: { roomName: string; isTyping: boolean }) => void;
+    typingResponse: (payload: { name: string; isTyping: boolean }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -21,7 +21,7 @@ export interface ClientToServerEvents {
         cb?: (data: Message[]) => void,
     ) => Message[];
     typing: (
-        payload: { name: string; isTyping: boolean },
+        payload: { roomName: string; isTyping: boolean },
         cb?: () => void,
     ) => void;
 }

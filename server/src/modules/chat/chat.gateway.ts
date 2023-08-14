@@ -132,4 +132,17 @@ export class ChatGateway {
 
         return excludeMessageDetails(newMsg);
     }
+
+    @SubscribeMessage('typing')
+    async handleTyping(
+        @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
+        @MessageBody('roomName') roomName: string,
+        @MessageBody('isTyping') isTyping: boolean,
+    ) {
+        const req = socket.request as Request;
+        const senderId = req.session.userId;
+        const sender = await this.usersService.findOneById(senderId);
+
+        socket.broadcast.to(roomName).emit('typingResponse', { name: sender.username, isTyping });
+    }
 }

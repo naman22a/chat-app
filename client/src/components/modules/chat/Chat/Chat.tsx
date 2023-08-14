@@ -31,9 +31,19 @@ const Chat: React.FC<Props> = (props) => {
     const [msgs, setMsgs] = useState<Message[] | null>(null);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [typingText, setTypingText] = useState('');
+    let timeout: any;
 
     useEffect(() => {
         socket.emit('join', { roomName: room.name });
+
+        socket.on('typingResponse', ({ name, isTyping }) => {
+            if (isTyping) {
+                setTypingText(`${name} is typing...`);
+            } else {
+                setTypingText('');
+            }
+        });
 
         socket.on('joined', (user: User) => {
             console.log(user);
@@ -52,6 +62,17 @@ const Chat: React.FC<Props> = (props) => {
             socket.off('receiveMessage');
         };
     }, []);
+
+    const timeoutFunction = () => {
+        socket.emit('typing', { roomName: room.name, isTyping: false });
+    };
+
+    const handleInputChange = (msg: string) => {
+        setMessage(msg);
+        socket.emit('typing', { roomName: room.name, isTyping: true });
+        clearTimeout(timeout);
+        timeout = setTimeout(timeoutFunction, 1000);
+    };
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -114,6 +135,11 @@ const Chat: React.FC<Props> = (props) => {
                     ))}
                 </ReactScrollableFeed>
             </div>
+            {typingText && (
+                <div>
+                    <p className="text-lg text-success">{typingText}</p>
+                </div>
+            )}
             <div>
                 <form
                     className="flex items-center mt-5"
@@ -122,7 +148,7 @@ const Chat: React.FC<Props> = (props) => {
                     <input
                         type="text"
                         value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        onChange={(e) => handleInputChange(e.target.value)}
                         className="input input-bordered w-full"
                         placeholder="Enter a message"
                     />
