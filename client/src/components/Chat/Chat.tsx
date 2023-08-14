@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import * as api from '@/api';
 import { Message } from '@/api/types';
 import { Room } from '@/api/rooms/types';
+import { User } from '@/api/users/types';
 import { formatError } from '@/utils';
 import { Spinner } from '@/components';
 import { useSocket } from '@/lib/socket';
+import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import { twMerge } from 'tailwind-merge';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { User } from '../../api/users/types';
-import toast from 'react-hot-toast';
 dayjs.extend(relativeTime);
 
 interface Props {

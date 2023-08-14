@@ -1,13 +1,13 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { User } from '@/api/users/types';
+import { OkResponse } from '@/api/types';
 import { useSocket } from '@/lib/socket';
 import { HandleSubmit } from '@/interfaces';
 import { notify, showError } from '@/utils';
 import { Button, InputField } from '@/components';
 import { Form, Formik } from 'formik';
 import { useQueryClient } from '@tanstack/react-query';
-import { OkResponse } from '../../../api/types';
-import { useRouter } from 'next/router';
 
 const socket = useSocket();
 
