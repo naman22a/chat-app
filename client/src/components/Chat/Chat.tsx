@@ -11,6 +11,8 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { User } from '../../api/users/types';
+import toast from 'react-hot-toast';
 dayjs.extend(relativeTime);
 
 interface Props {
@@ -31,6 +33,13 @@ const Chat: React.FC<Props> = (props) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        socket.emit('join', { roomName: room.name });
+
+        socket.on('joined', (user: User) => {
+            console.log(user);
+            toast.success(`${user.username} joined the chat`);
+        });
+
         socket.on('receiveMessage', (newMsg: Message) => {
             setMsgs((prev) => [...prev!, newMsg]);
         });
@@ -39,6 +48,10 @@ const Chat: React.FC<Props> = (props) => {
         socket.emit('messages', { roomId: room.id }, (data: Message[]) => {
             setMsgs(data);
         });
+
+        return () => {
+            socket.off('receiveMessage');
+        };
     }, []);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {

@@ -29,16 +29,21 @@ const JoinRoomBtn: React.FC = () => {
                 'join',
                 { roomName: name },
                 async (res: OkResponse & { data?: User }) => {
-                    if (res.ok && res.data && !res.errors) {
-                        await queryClient.invalidateQueries([
-                            'rooms',
-                            'joined',
-                        ]);
-                        await router.push(`/rooms/${name}`);
-                        notify('Joined new room');
-                    } else if (res.errors) {
-                        setErrors({ name: res.errors[0].message });
-                    } else {
+                    try {
+                        if (res.ok && res.data && !res.errors) {
+                            await queryClient.invalidateQueries([
+                                'rooms',
+                                'joined',
+                            ]);
+                            await router.push(`/rooms/${name}`);
+                            notify('Joined new room');
+                        } else if (res.errors) {
+                            setErrors({ name: res.errors[0].message });
+                        } else {
+                            showError();
+                        }
+                    } catch (error) {
+                        console.error(error);
                         showError();
                     }
                 },

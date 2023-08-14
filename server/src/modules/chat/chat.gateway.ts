@@ -3,13 +3,14 @@ import {
     MessageBody,
     SubscribeMessage,
     WebSocketGateway,
+    WebSocketServer,
 } from '@nestjs/websockets';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../../config';
 import { MessagesService, excludeMessageDetails } from '../messages';
 import { RoomsService } from '../rooms';
 import { UsersService, excludeUserDetails } from '../../shared';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ServerToClientEvents } from '../../common/events';
 import { Message, User } from '@prisma/client';
 import { OkResponse } from '../../common/interfaces';
@@ -32,6 +33,9 @@ export class ChatGateway {
         private roomsService: RoomsService,
         private messagesService: MessagesService,
     ) {}
+
+    @WebSocketServer()
+    io: Server<any, ServerToClientEvents>;
 
     afterInit(client: Socket) {
         const wrap = (middleware: Function) => (socket: Socket, next: (err?: Error) => void) =>
@@ -62,7 +66,7 @@ export class ChatGateway {
     async joinRoom(
         @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
         @MessageBody('roomName') roomName: string,
-    ): Promise<OkResponse & { data?: Omit<User, 'password'> }> {
+    ): Promise<OkResponse & { data?: null | Omit<User, 'password'> }> {
         try {
             const req = socket.request as Request;
             const userId = req.session.userId;
@@ -85,6 +89,11 @@ export class ChatGateway {
 
             // not a participant yet
             await this.roomsService.becomeAParticipant(userId, roomName);
+            // socket.to(roomName).emit('joined', excludeUserDetails(user));
+            // this.io.to([room.name]).emit('joined', excludeUserDetails(user));
+            // this.io.to(roomName).emit('joined', excludeUserDetails(user));
+            // socket.emit('joined', excludeUserDetails(user));
+            // this.io.to(roomName).emit('joined', excludeUserDetails(user));
             socket.to(roomName).emit('joined', excludeUserDetails(user));
 
             return {
@@ -98,12 +107,7 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('messages')
-    async handleMessages(
-        @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
-        @MessageBody('roomId') roomId: number,
-    ) {
-        const room = await this.roomsService.findOneById(roomId);
-        socket.join(room.name);
+    async handleMessages(@MessageBody('roomId') roomId: number) {
         const msgs = await this.messagesService.findAll(roomId);
         return msgs.map((msg) => excludeMessageDetails(msg));
     }
