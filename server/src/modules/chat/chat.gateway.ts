@@ -4,33 +4,32 @@ import {
     SubscribeMessage,
     WebSocketGateway,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { ServerToClientEvents } from '../../common/events';
-import { MessagesService } from './messages.service';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../../config';
+import { MessagesService, excludeMessageDetails } from '../messages';
+import { RoomsService } from '../rooms';
+import { UsersService, excludeUserDetails } from '../../shared';
+import { Socket } from 'socket.io';
+import { ServerToClientEvents } from '../../common/events';
+import { Message, User } from '@prisma/client';
+import { OkResponse } from '../../common/interfaces';
+import { Request } from 'express';
+import * as session from 'express-session';
 import { COOKIE_NAME, __prod__ } from '../../common/constants';
 import { redis } from '../../common/redis';
-import * as session from 'express-session';
-const RedisStore = require('connect-redis').default;
-import { Request } from 'express';
-import { UseGuards } from '@nestjs/common';
-import { WsAuthGuard } from '../../auth/ws-auth.guard';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
-import { RoomsService } from '../rooms/rooms.service';
-import { excludeMessageDetails } from './utils';
-import { Message, User } from '@prisma/client';
+const RedisStore = require('connect-redis').default;
 
-@UseGuards(WsAuthGuard)
 @WebSocketGateway({
     namespace: 'chat',
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
-export class MessagesGateway {
+export class ChatGateway {
     constructor(
-        private messagesService: MessagesService,
-        private roomsService: RoomsService,
         private configService: ConfigService<EnvironmentVariables>,
+        private usersService: UsersService,
+        private roomsService: RoomsService,
+        private messagesService: MessagesService,
     ) {}
 
     afterInit(client: Socket) {
@@ -56,6 +55,45 @@ export class MessagesGateway {
             ) as any,
         );
         client.use(SocketAuthMiddleware() as any);
+    }
+
+    @SubscribeMessage('join')
+    async joinRoom(
+        @ConnectedSocket() socket: Socket<any, ServerToClientEvents>,
+        @MessageBody('roomName') roomName: string,
+    ): Promise<OkResponse & { data?: Omit<User, 'password'> }> {
+        try {
+            const req = socket.request as Request;
+            const userId = req.session.userId;
+
+            const user = await this.usersService.findOneById(userId);
+            const room = await this.roomsService.findOneByName(roomName);
+            // room not found
+            if (!room)
+                return { ok: false, errors: [{ field: 'roomName', message: 'room not found' }] };
+
+            // already a participant
+            if (room.participants.filter((p) => p.id === userId)[0]) {
+                socket.join(roomName);
+                return {
+                    ok: true,
+                    errors: [{ field: 'roomName', message: 'room already joined' }],
+                };
+            }
+
+            // not a participant yet
+            await this.roomsService.becomeAParticipant(userId, roomName);
+            socket.join(roomName);
+            socket.to(roomName).emit('newUserJoined', excludeUserDetails(user));
+
+            return {
+                ok: true,
+                data: excludeUserDetails(user),
+            };
+        } catch (error) {
+            console.error(error);
+            return { ok: false };
+        }
     }
 
     @SubscribeMessage('messages')
