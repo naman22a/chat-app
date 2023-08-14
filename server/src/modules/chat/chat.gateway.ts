@@ -89,11 +89,6 @@ export class ChatGateway {
 
             // not a participant yet
             await this.roomsService.becomeAParticipant(userId, roomName);
-            // socket.to(roomName).emit('joined', excludeUserDetails(user));
-            // this.io.to([room.name]).emit('joined', excludeUserDetails(user));
-            // this.io.to(roomName).emit('joined', excludeUserDetails(user));
-            // socket.emit('joined', excludeUserDetails(user));
-            // this.io.to(roomName).emit('joined', excludeUserDetails(user));
             socket.to(roomName).emit('joined', excludeUserDetails(user));
 
             return {
