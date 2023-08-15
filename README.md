@@ -43,15 +43,13 @@ I made this chat app using NodeJS with Nest JS as the backend framework.It uses 
 
 ## 📷 Screenshots
 
-![chat app image](./assets/chat2.png)
+![chat app image](./assets/chat.png)
 
 ![chat app image](./assets/create-room.png)
 
+![chat app image](./assets/chat2.png)
+
 ![chat app image](./assets/rooms.png)
-
-![chat app image](./assets/login.png)
-
-![chat app image](./assets/register.png)
 
 ## 🙋🏻‍♂️ Stay in touch
 
