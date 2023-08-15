@@ -46,7 +46,6 @@ const Chat: React.FC<Props> = (props) => {
         });
 
         socket.on('joined', (user: User) => {
-            console.log(user);
             toast.success(`${user.username} joined the chat`);
         });
 
