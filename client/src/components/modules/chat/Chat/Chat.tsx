@@ -103,7 +103,7 @@ const Chat: React.FC<Props> = (props) => {
     }
 
     return (
-        <div className="flex flex-col justify-between h-3/4">
+        <div className="flex flex-col justify-between h-3/4 w-full lg:w-3/4">
             <div className="overflow-y-scroll h-full p-4">
                 <ReactScrollableFeed>
                     {msgs.map((msg) => (

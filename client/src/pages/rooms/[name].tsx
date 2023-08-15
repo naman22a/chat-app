@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import * as api from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { Chat, IsAuth, Spinner } from '@/components';
+import { Chat, IsAuth, ParticipantList, Spinner } from '@/components';
 
 const RoomPage: NextPage = () => {
     const router = useRouter();
@@ -26,7 +26,10 @@ const RoomPage: NextPage = () => {
             <h1 className="text-4xl font-semibold mb-5">
                 Room: <span className="text-accent">{name}</span>
             </h1>
-            <Chat room={room} />
+            <div className="h-full flex">
+                <Chat room={room} />
+                <ParticipantList room={room} />
+            </div>
         </div>
     );
 };
