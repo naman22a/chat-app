@@ -115,17 +115,7 @@ export class ChatGateway {
         const senderId = req.session.userId;
         const room = await this.roomsService.findOneByName(roomName);
         if (!room) return null;
-        // const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
-        const newMsg = {
-            id: Date.now(),
-            text: textMsg,
-            senderId,
-            roomId: room.id,
-            sender: room.participants.filter((p) => p.id === senderId)[0],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        } satisfies Message & { sender: User };
-        console.log(excludeMessageDetails(newMsg));
+        const newMsg = await this.messagesService.create(senderId, room.id, { text: textMsg });
         socket.to(room.name).emit('receiveMessage', excludeMessageDetails(newMsg));
 
         return excludeMessageDetails(newMsg);
