@@ -21,8 +21,6 @@ import { redis } from '../../common/redis';
 import { SocketAuthMiddleware } from '../../auth/ws.middleware';
 const RedisStore = require('connect-redis').default;
 
-const sleep = (ms: number = 2000) => new Promise((resolve) => setTimeout(resolve, ms));
-
 @WebSocketGateway({
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
 })
